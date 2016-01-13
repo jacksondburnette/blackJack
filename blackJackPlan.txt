@@ -1,0 +1,28 @@
+Classes:
+  Player
+    auto or human attribute 
+    bankroll attribute -- how much money the player has
+    add_bankroll and sub_bankroll methods
+    move method -- hit, stay, fold, split (may not implement immediately)
+    bet method
+  Card
+    suit attribute
+    rank attribute
+    true_value method -- assign value according to black jack (i.e. face cards = 10, ace = 1, number cards = number)
+    get_rank method
+    get_suit method
+    __str__ method -- {rank} of {suit}
+  Deck -- Should this inherit card???
+    cards attribute -- list to hold deck contents
+    make_deck method -- takes suits and ranks (for suit in suits, for rank in ranks, deck.append(Card(rank,suit)))
+    shuffle method
+    add_card and remove_card methods
+    __str__ -- for card in deck, print card
+  Hand -- should this inherit deck???
+  
+
+Flow
+  
+  1. shuffle deck
+  2. deal cards
+  3. 
