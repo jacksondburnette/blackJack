@@ -2,6 +2,7 @@
 """Classes to be used in blackJack game"""
 
 from random import shuffle
+import pdb
 
 class Player(object):
 
@@ -14,22 +15,20 @@ class Player(object):
     def bankroll_add(self,value):
         """Return players bankroll with value added"""
         self.bankroll += value
-        return self.bankroll
 
     def bankroll_sub(self,value):
         """Return players bankroll with value subtracted"""
         self.bankroll -= value
-        return self.bankroll
 
     def bet(self,value):
         """allow player to bet value
         Return tuple (bet,updated bankroll)"""
-        bet = value
-        self.bankroll = self.bankroll_sub(value)
-        return (bet,self.bankroll)
+        self.bankroll_sub(value)
+        return value
 
-    def move(self,choice):
+    def move(self):
         """choice = hit or stay (split TBD)"""
+        choice = raw_input('Would you like to hit or stay? ')
         done = False
         while not done:
             if(choice == 'hit'):
@@ -40,6 +39,7 @@ class Player(object):
                 done = True
             else:
                 print 'Not a valid move, try again.'
+                choice = raw_input('Would you like to hit or stay? ')
 
 class Card(object):
 
