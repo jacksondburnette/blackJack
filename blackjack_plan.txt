@@ -2,13 +2,15 @@ Classes:
   Player
     human attribute -- true if human, false if auto (aka house)
     bankroll attribute -- how much money the player has
+    busted attribute
+    is_turn attribute
     add_bankroll and sub_bankroll methods
     move method -- hit, stay, fold, split (may not implement immediately)
     bet method
   Card
     suit attribute
     rank attribute
-    true_value method -- assign value according to black jack (i.e. face cards = 10, 
+    int_value method -- assign value according to black jack (i.e. face cards = 10, 
         ace = 1, number cards = number)
     get_rank method
     get_suit method
