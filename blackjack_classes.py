@@ -67,7 +67,7 @@ class Card(object):
     def int_value(self):
         """assign integer value to card object based on blackjack rules
         (i.e. numerical card = number, face cards = 10, low_A = 1, high_A = 11"""
-        return int_values[self.get_rank]
+        return self.int_values[self.get_rank()]
 
 class Deck(object):
 
@@ -83,19 +83,17 @@ class Deck(object):
 
     def make_deck(self):
         """makes standard 52 card deck"""
-        for suits in self.suits:
+        for suit in self.suits:
             for rank in self.ranks:
                 self.contents.append(Card(suit,rank))
 
     def add_card(self,card):
         """add card object to deck contents"""
-        self.contents = self.contents.append(card)
-        return self.contents
+        self.contents.append(card)
 
     def sub_card(self,card):
         """remove card object from deck contents"""
         self.contents.remove(card)
-        return self.contents
 
     def shuffle(self):
         """returns contents of deck, shuffled"""
