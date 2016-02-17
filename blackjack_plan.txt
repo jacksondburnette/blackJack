@@ -27,6 +27,7 @@ Classes:
     add_card and remove_card methods
     make_hand method -- deals from deck
     hand_value method -- gets true_value of a hand (trying to get 21)
+    deal method -- deals perscribed #  cards into hand
   
 
 Flow:
