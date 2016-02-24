@@ -4,43 +4,6 @@
 from random import shuffle
 import pdb
 
-class Player(object):
-
-    def __init__(self,human=True,bankroll=0,busted=False,is_turn=False):
-        self.human = human
-        self.bankroll = bankroll
-        self.busted = busted
-        self.is_turn = is_turn
-
-    def bankroll_add(self,value):
-        """Return players bankroll with value added"""
-        self.bankroll += value
-
-    def bankroll_sub(self,value):
-        """Return players bankroll with value subtracted"""
-        self.bankroll -= value
-
-    def bet(self,value):
-        """allow player to bet value
-        Return tuple (bet,updated bankroll)"""
-        self.bankroll_sub(value)
-        return value
-
-    def move(self):
-        """choice = hit or stay (split TBD)"""
-        choice = raw_input('Would you like to hit or stay? ')
-        done = False
-        while not done:
-            if(choice == 'hit'):
-                print 'Hit me!'
-                done = True
-            elif(choice == 'stay'):
-                print 'Stay'
-                done = True
-            else:
-                print 'Not a valid move, try again.'
-                choice = raw_input('Would you like to hit or stay? ')
-
 class Card(object):
 
     #A=1 by default
@@ -122,7 +85,6 @@ class Hand(object):
          """make blackjack hand with given size (2 in blackjack) from deck object"""
          i = 0
          while i < num_cards:
-             pdb.set_trace()
              #move card from deck to hand
              self.add_card(deck.top_card())
              deck.sub_card(deck.top_card())
@@ -138,3 +100,71 @@ class Hand(object):
         for card in self.contents:
             val += card.int_value()
         return val
+
+class Player(object):
+
+    def __init__(self,name,hand,human=True,bankroll=0,busted=False,is_turn=False):
+        self.human = human
+        self.bankroll = bankroll
+        self.busted = busted
+        self.is_turn = is_turn
+        self.hand = Hand()
+        self.name = name
+
+    def bankroll_add(self,value):
+        """Return players bankroll with value added"""
+        self.bankroll += value
+
+    def bankroll_sub(self,value):
+        """Return players bankroll with value subtracted"""
+        self.bankroll -= value
+
+    def bet(self,value):
+        """allow player to bet value
+        subtract value from bankroll, return value"""
+        self.bankroll_sub(value)
+        return value 
+
+    def hit(self,deck):
+        """deal 1 card from deck object"""
+         self.hand.deal(deck,1)
+
+    def stay(self):
+        pass
+
+    def double(self,bet):
+        """double players existing bet"""
+        self.bet(bet)
+
+    def move(self,deck):
+        """choice = hit or stay (split TBD)"""
+        choice = raw_input('Your move: ')
+        done = False
+        while not done:
+            if(choice == 'hit'):
+                self.hit(deck)
+                print 'Hit me!'
+                self.hand.show()
+                choice = raw_input('Your move: ')
+            elif(choice == 'stay'):
+                print 'Stay'
+                done = True
+            else:
+                print 'Not a valid move, try again.'
+                choice = raw_input('Your move: ')
+
+class Game(object):
+
+    def __init__(self,players=[]):
+        self.players = players
+
+    def house_move(self,player):
+        """house hits until hand value >= 17"""
+        limit = 17
+        while player.hand.value() <= limit:
+            player.hit()
+        return player.hand.value()
+
+    def player_move(self):
+        for player in players:
+            player.move()

@@ -28,7 +28,10 @@ Classes:
     make_hand method -- deals from deck
     hand_value method -- gets true_value of a hand (trying to get 21)
     deal method -- deals perscribed #  cards into hand
-  
+  Game
+    players_move
+    house_move 
+    
 
 Flow:
   1. shuffle deck
