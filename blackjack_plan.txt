@@ -35,7 +35,7 @@ Classes:
 
 Flow:
   1. shuffle deck
-  2. human players bet
+  2. deal hand to each player
   3. deal cards
   4. take turn, hit, stay or bust
     humans play

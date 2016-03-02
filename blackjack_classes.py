@@ -103,12 +103,12 @@ class Hand(object):
 
 class Player(object):
 
-    def __init__(self,name,hand,human=True,bankroll=0,busted=False,is_turn=False):
+    def __init__(self,name,hand=Hand(),human=True,bankroll=0,busted=False,is_turn=False):
         self.human = human
         self.bankroll = bankroll
         self.busted = busted
         self.is_turn = is_turn
-        self.hand = Hand()
+        self.hand = hand
         self.name = name
 
     def bankroll_add(self,value):
@@ -127,7 +127,7 @@ class Player(object):
 
     def hit(self,deck):
         """deal 1 card from deck object"""
-         self.hand.deal(deck,1)
+        self.hand.deal(deck,1)
 
     def stay(self):
         pass
@@ -147,7 +147,7 @@ class Player(object):
                 self.hand.show()
                 choice = raw_input('Your move: ')
             elif(choice == 'stay'):
-                print 'Stay'
+                print 'Thank you'
                 done = True
             else:
                 print 'Not a valid move, try again.'
@@ -168,3 +168,11 @@ class Game(object):
     def player_move(self):
         for player in players:
             player.move()
+
+    def meet_players(num_players):
+        i = 0
+        players = []
+        while i < num_players:
+            name = raw_input("Player {}, what's your name?".format(str(i+1)))
+            players.append(Player(name))
+        return players
