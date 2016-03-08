@@ -103,7 +103,8 @@ class Hand(object):
 
 class Player(object):
 
-    def __init__(self,name,hand=Hand(),human=True,bankroll=0,busted=False,is_turn=False):
+    def __init__(self,name,hand=Hand(),human=True,bankroll=0,
+                 busted=False,is_turn=False):
         self.human = human
         self.bankroll = bankroll
         self.busted = busted
@@ -123,7 +124,7 @@ class Player(object):
         """allow player to bet value
         subtract value from bankroll, return value"""
         self.bankroll_sub(value)
-        return value 
+        return value
 
     def hit(self,deck):
         """deal 1 card from deck object"""
@@ -145,7 +146,12 @@ class Player(object):
                 self.hit(deck)
                 print 'Hit me!'
                 self.hand.show()
-                choice = raw_input('Your move: ')
+                if self.hand.value() > 21:
+                    print 'Bust! Uh-Oh'
+                    self.busted = True
+                    done = True
+                if not done:
+                    choice = raw_input('Your move: ')
             elif(choice == 'stay'):
                 print 'Thank you'
                 done = True
@@ -166,13 +172,22 @@ class Game(object):
         return player.hand.value()
 
     def player_move(self):
-        for player in players:
+        for player in self.players:
             player.move()
 
-    def meet_players(num_players):
+    def meet_players(self):
         i = 0
-        players = []
+        num_players = raw_input("How many players? ")
         while i < num_players:
             name = raw_input("Player {}, what's your name?".format(str(i+1)))
-            players.append(Player(name))
+            self.players.append(Player(name))
         return players
+
+    def deal_cards(self,deck):
+        for player in self.players:
+            player.hand.deal(deck)
+
+    def initial_bets(self):
+        for player in self.players:
+            bet_val = raw_input("{}, make your bet: ".format(player.name))
+            player.bet(bet_val)
