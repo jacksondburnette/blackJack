@@ -179,7 +179,7 @@ class Game(object):
         i = 0
         num_players = raw_input("How many players? ")
         while i < num_players:
-            name = raw_input("Player {}, what's your name?".format(str(i+1)))
+            name = raw_input("Player {}, what's your name?".format(str(i+1))).lower()
             self.players.append(Player(name))
         return players
 
@@ -191,3 +191,19 @@ class Game(object):
         for player in self.players:
             bet_val = raw_input("{}, make your bet: ".format(player.name))
             player.bet(bet_val)
+    
+    def remove_players():
+        player_done = raw_input('Would anyone like to leave the table? (y/n) ')
+        while player_done == 'y':
+            name = raw_input('Name: ').lower()
+            for player in self.players:
+                if player.name == name:
+                    self.players.remove(player)
+            player_done = raw_input('Anyone else? (y/n) ')
+    
+    def game_done(self):
+        if self.players == []:
+            game_done = 1
+        else:
+            game_done = 0
+        return game_done
