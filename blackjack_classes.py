@@ -103,14 +103,15 @@ class Hand(object):
 
 class Player(object):
 
-    def __init__(self,name,hand=Hand(),human=True,bankroll=0,
+    def __init__(self,name,hand=0,human=True,bankroll=1000,
                  busted=False,is_turn=False):
         self.human = human
         self.bankroll = bankroll
         self.busted = busted
         self.is_turn = is_turn
-        self.hand = hand
         self.name = name
+        if not hand:
+            self.hand = Hand()
 
     def bankroll_add(self,value):
         """Return players bankroll with value added"""
@@ -139,6 +140,7 @@ class Player(object):
 
     def move(self,deck):
         """choice = hit or stay (split TBD)"""
+        #pdb.set_trace()
         choice = raw_input('Your move: ')
         done = False
         while not done:
@@ -161,7 +163,7 @@ class Player(object):
 
 class Game(object):
 
-    def __init__(self,players=[]):
+    def __init__(self,players=[Player(name='house')]):
         self.players = players
 
     def house_move(self,player):
@@ -171,28 +173,54 @@ class Game(object):
             player.hit()
         return player.hand.value()
 
-    def player_move(self):
-        for player in self.players:
-            player.move()
+    def players_move(self,deck):
+        #self.players[0] is the house, so iterate through self.players[1:]
+        for player in self.players[1:]:
+            player.move(deck)
 
     def meet_players(self):
         i = 0
-        num_players = raw_input("How many players? ")
+        num_players = int(raw_input("How many players? "))
+        #pdb.set_trace()
         while i < num_players:
-            name = raw_input("Player {}, what's your name?".format(str(i+1))).lower()
+            name = raw_input("Player {}, what's your name? "
+                             .format(str(i+1))).lower()
             self.players.append(Player(name))
-        return players
+            i += 1
 
     def deal_cards(self,deck):
         for player in self.players:
             player.hand.deal(deck)
 
     def initial_bets(self):
-        for player in self.players:
-            bet_val = raw_input("{}, make your bet: ".format(player.name))
+        #remove first item in self.players because it is the house
+        for player in self.players[1:]:
+            bet_val = int(raw_input("{}, make your bet: ".format(player.name)))
             player.bet(bet_val)
-    
-    def remove_players():
+
+    def payout(self):
+        #self.players[0] is the house
+        house = self.players[0]
+        if not house.busted:
+            for player in self.players[1:]:
+                #player beats house
+                if player.hand.value() > house.value and not player.busted:
+                    player.bankroll += (player.bet*2)
+                #house beats player
+                elif player.hand.value() < house.value or player.busted:
+                    player.bankroll -= player.bet
+                #player gets blackjack
+                elif player.hand.value() == 21:
+                    player.bankroll += (player.bet*2.5)
+        else:
+            for player in self.players[1:]:
+                if not player.busted:
+                    if player.hand.value() == 21:
+                        player.bankroll += (player.bet)*2.5
+                    else:
+                        player.backroll += (player.bet)*2
+
+    def remove_players(self):
         player_done = raw_input('Would anyone like to leave the table? (y/n) ')
         while player_done == 'y':
             name = raw_input('Name: ').lower()
@@ -200,10 +228,12 @@ class Game(object):
                 if player.name == name:
                     self.players.remove(player)
             player_done = raw_input('Anyone else? (y/n) ')
-    
-    def game_done(self):
-        if self.players == []:
-            game_done = 1
-        else:
+
+    def check_done(self):
+        """returns 1 if game is over"""
+        #if length of players list is 1, only the house if left
+        if len(self.players) == 1:
             game_done = 0
+        else:
+            game_done = 1
         return game_done
