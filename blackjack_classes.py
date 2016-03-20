@@ -162,6 +162,9 @@ class Player(object):
             else:
                 print 'Not a valid move, try again.'
                 choice = raw_input('Your move: ')
+    
+    def __str__(self):
+        return '{player} bankroll: {bankroll}'.format(player=self.name,bankroll=self.bankroll)
 
 class Game(object):
 
@@ -211,19 +214,24 @@ class Game(object):
                 #player beats house
                 if player.hand.value() > house.hand.value() and not player.busted:
                     player.bankroll += (player.bet*2)
+                    print player
                 #house beats player
                 elif player.hand.value() < house.hand.value() or player.busted:
                     player.bankroll -= player.bet
+                    print player
                 #player gets blackjack
                 elif player.hand.value() == 21:
                     player.bankroll += (player.bet*2.5)
+                    print player
         else:
             for player in self.players[1:]:
                 if not player.busted:
                     if player.hand.value() == 21:
                         player.bankroll += (player.bet)*2.5
+                        print player
                     else:
                         player.backroll += (player.bet)*2
+                        print player
 
     def cleanup_hands():
         for player in self.players[1:0]:
