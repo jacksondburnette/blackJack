@@ -233,9 +233,10 @@ class Game(object):
                         player.backroll += (player.bet)*2
                         print player
 
-    def cleanup_hands():
+    def cleanup():
         for player in self.players[1:0]:
             player.hand = []
+            player.bet = 0
 
     def remove_players(self):
         player_done = raw_input('Would anyone like to leave the table? (y/n) ')

@@ -21,7 +21,7 @@ def play_blackjack():
         game.players_move(deck)
         game.house_move(house,deck)
         game.payout()
-        game.cleanup_hands()
+        game.cleanup()
 
         game.remove_players()
         game_on = game.check_done()
