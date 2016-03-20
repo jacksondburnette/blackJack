@@ -17,10 +17,11 @@ def play_blackjack():
     while game_on:
         game.initial_bets()
         game.deal_cards(deck)
-        pdb.set_trace()
+        #pdb.set_trace()
         game.players_move(deck)
-        game.house_move(house)
+        game.house_move(house,deck)
         game.payout()
+        game.cleanup_hands()
 
         game.remove_players()
         game_on = game.check_done()

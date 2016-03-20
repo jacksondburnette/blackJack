@@ -70,8 +70,9 @@ class Deck(object):
 
 class Hand(object):
 
-    def __init__(self, contents=[]):
-        self.contents = contents
+    def __init__(self, contents=0):
+        if not contents:
+            self.contents = []
 
     def add_card(self,card):
         """add card object to hand contents"""
@@ -103,9 +104,10 @@ class Hand(object):
 
 class Player(object):
 
-    def __init__(self,name,hand=0,human=True,bankroll=1000,
+    def __init__(self,name,bet=0,hand=0,human=True,bankroll=1000,
                  busted=False,is_turn=False):
         self.human = human
+        self.bet = bet
         self.bankroll = bankroll
         self.busted = busted
         self.is_turn = is_turn
@@ -121,7 +123,7 @@ class Player(object):
         """Return players bankroll with value subtracted"""
         self.bankroll -= value
 
-    def bet(self,value):
+    def make_bet(self,value):
         """allow player to bet value
         subtract value from bankroll, return value"""
         self.bankroll_sub(value)
@@ -166,11 +168,11 @@ class Game(object):
     def __init__(self,players=[Player(name='house')]):
         self.players = players
 
-    def house_move(self,player):
+    def house_move(self,player,deck):
         """house hits until hand value >= 17"""
         limit = 17
         while player.hand.value() <= limit:
-            player.hit()
+            player.hit(deck)
         return player.hand.value()
 
     def players_move(self,deck):
@@ -189,14 +191,17 @@ class Game(object):
             i += 1
 
     def deal_cards(self,deck):
+        #pdb.set_trace()
         for player in self.players:
             player.hand.deal(deck)
 
     def initial_bets(self):
         #remove first item in self.players because it is the house
         for player in self.players[1:]:
+            player.hand.show()
+            print "{}, the value of your hand is currently {}".format(player.name,player.hand.value())
             bet_val = int(raw_input("{}, make your bet: ".format(player.name)))
-            player.bet(bet_val)
+            player.bet = player.make_bet(bet_val)
 
     def payout(self):
         #self.players[0] is the house
@@ -204,10 +209,10 @@ class Game(object):
         if not house.busted:
             for player in self.players[1:]:
                 #player beats house
-                if player.hand.value() > house.value and not player.busted:
+                if player.hand.value() > house.hand.value() and not player.busted:
                     player.bankroll += (player.bet*2)
                 #house beats player
-                elif player.hand.value() < house.value or player.busted:
+                elif player.hand.value() < house.hand.value() or player.busted:
                     player.bankroll -= player.bet
                 #player gets blackjack
                 elif player.hand.value() == 21:
@@ -219,6 +224,10 @@ class Game(object):
                         player.bankroll += (player.bet)*2.5
                     else:
                         player.backroll += (player.bet)*2
+
+    def cleanup_hands():
+        for player in self.players[1:0]:
+            player.hand = []
 
     def remove_players(self):
         player_done = raw_input('Would anyone like to leave the table? (y/n) ')
