@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
+import os
 import pdb
 import blackjack_classes as blackjack
+
+def clear():
+    if os.name == 'nt':
+        os.system('cls')
+    else:
+        os.system('clear')
 
 def play_blackjack():
     deck = blackjack.Deck()
@@ -17,7 +24,6 @@ def play_blackjack():
     while game_on:
         game.initial_bets()
         game.deal_cards(deck)
-        #pdb.set_trace()
         game.players_move(deck)
         game.house_move(house,deck)
         game.payout()
@@ -25,5 +31,6 @@ def play_blackjack():
 
         game.remove_players()
         game_on = game.check_done()
+        clear()
 
 play_blackjack()
